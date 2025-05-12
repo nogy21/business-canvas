@@ -1,6 +1,6 @@
 import { ConfigProvider } from 'antd'
-import Title from 'antd/lib/typography/Title'
 import koKR from 'antd/locale/ko_KR'
+import MemberTable from './components/MemberTable'
 
 export default function App() {
   return (
@@ -12,10 +12,8 @@ export default function App() {
         },
       }}
     >
-      <div className="p-6">
-        <Title level={2} className="mb-6">
-          회원 목록
-        </Title>
+      <div>
+        <MemberTable />
       </div>
     </ConfigProvider>
   )
