@@ -1,0 +1,34 @@
+@import "./styles/fonts/pretendard.css";
+
+@layer theme, base, antd, components, utilities;
+
+@import "tailwindcss";
+
+:root {
+  --font-pretendard: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-pretendard);
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-pretendard);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+.ant-typography,
+.ant-typography h1,
+.ant-typography h2,
+.ant-typography h3,
+.ant-typography h4,
+.ant-typography h5,
+.ant-typography h6 {
+  font-family: var(--font-pretendard) !important;
+}
