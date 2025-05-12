@@ -1,4 +1,5 @@
-import { Table } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Table } from 'antd';
 import type { ColumnType } from 'antd/lib/table';
 import Title from 'antd/lib/typography/Title';
 
@@ -12,7 +13,17 @@ export default function MemberTable() {
   return (
     <div>
       {/* 테이블 헤더 */}
-      <Title level={2} className="h-[48px] flex items-center mb-0! text-[16px]! px-[14px]">회원 목록</Title>
+      <div className="flex items-center justify-between px-[14px]">
+        <Title level={2} className="h-[48px] flex items-center mb-0! text-[16px]!">회원 목록</Title>
+        <Button
+          type="primary"
+          className="rounded-full"
+          icon={<PlusOutlined className="text-[11px]" />}
+          onClick={() => { }}>
+          추가
+        </Button>
+      </div>
+
       {/* 테이블 본체 */}
       <Table
         rowKey="name"
@@ -39,3 +50,4 @@ export default function MemberTable() {
     </div>
   );
 }
+
