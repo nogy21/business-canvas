@@ -1,5 +1,6 @@
 import { defaultFields, defaultRecords } from '@/data/default';
 import type { RecordData } from '@/types/record';
+import { MoreOutlined } from '@ant-design/icons';
 import { Checkbox } from 'antd';
 import type { ColumnType } from 'antd/lib/table';
 import type { FilterDropdownProps } from 'antd/lib/table/interface';
@@ -11,7 +12,7 @@ import type { ReactNode } from 'react';
 const createCheckboxFilterDropdown = (options: string[]) =>
   ({ setSelectedKeys, selectedKeys, confirm }: FilterDropdownProps) =>
   (
-    <div className="p-2">
+    <div className="w-full p-2">
       {options.map((value) => (
         <div key={value}>
           <Checkbox
@@ -38,21 +39,46 @@ const createFilteredColumn = (
   key: keyof RecordData,
   label: string,
   options: string[],
-  valueRenderer: (value: string | boolean) => ReactNode = (value) => value
+  valueRenderer: (value: string | boolean) => ReactNode = (value) => value,
+  width = 120,
 ): ColumnType<RecordData> => ({
-  title: label,
+  title: <span className='font-semibold text-gray-800'>
+    {label}
+  </span>,
   dataIndex: key,
   key,
-  render: valueRenderer,
+  width,
+  render: (value) => <span className='text-sm'>{valueRenderer(value)}</span>,
   filterDropdown: createCheckboxFilterDropdown(options),
   onFilter: (value, record) => String(record[key]) === value,
 });
 
 /**
+ * 더보기 버튼 컬럼
+ */
+const moreButtonColumn: ColumnType<RecordData> = {
+  title: '', // 헤더 비움
+  key: 'actions',
+  dataIndex: 'actions',
+  width: 48, // Figma에 맞게 조정
+  align: 'center',
+  render: () => (
+    <button
+      type="button"
+      className="flex items-center justify-center w-8 h-8 rounded hover:bg-gray-100"
+      aria-label="메뉴"
+      tabIndex={0}
+    >
+      <MoreOutlined className="text-sm text-gray-500" />
+    </button>
+  ),
+}
+
+/**
  * 최종 컬럼 구성
  */
 export default function createColumns(): ColumnType<RecordData>[] {
-  return defaultFields.map((field) => {
+  return [...defaultFields.map((field) => {
     switch (field.key) {
       case "emailOptIn":
         return createFilteredColumn(
@@ -79,12 +105,16 @@ export default function createColumns(): ColumnType<RecordData>[] {
             ? (v: boolean) => <Checkbox checked={Boolean(v)} />
             : (v: string) => v;
         return {
-          title: field.label,
+          title: (
+            <span className='font-semibold text-gray-800'>
+              {field.label}
+            </span>
+          ),
           dataIndex: field.key,
           key: field.key,
           render,
         };
       }
     }
-  });
+  }), moreButtonColumn];
 }

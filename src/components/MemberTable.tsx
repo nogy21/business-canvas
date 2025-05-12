@@ -12,9 +12,30 @@ export default function MemberTable() {
   return (
     <div>
       {/* 테이블 헤더 */}
-      <Title level={2}>회원 목록</Title>
+      <Title level={2} className="h-[48px] flex items-center mb-0! text-[16px]! px-[14px]">회원 목록</Title>
       {/* 테이블 본체 */}
-      <Table rowKey="name" dataSource={defaultRecords} columns={columns} pagination={false} />
+      <Table
+        rowKey="name"
+        rowSelection={{
+          type: 'checkbox',
+          onChange: (selectedRowKeys, selectedRows) => {
+            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          },
+        }}
+        dataSource={defaultRecords}
+        columns={columns}
+        pagination={false}
+        className="rounded-xl border border-gray-200 bg-white"
+        rowClassName={() => "text-base font-normal"}
+        components={{
+          header: {
+            cell: (props) => <td {...props} className="px-2 py-2" />,
+          },
+          body: {
+            cell: (props) => <td {...props} className="px-2! py-3!" />,
+          },
+        }}
+      />
     </div>
   );
 }
