@@ -22,7 +22,8 @@ const createFieldColumn = (
     </span>,
     dataIndex: field.key,
     key: field.key,
-    width: 120,
+    width: field.width,
+    align: field.align,
     render,
     ...(filterOptions && {
       filterDropdown: createCheckboxFilterDropdown(filterOptions),

@@ -48,6 +48,8 @@ export const memberFields: MemberField[] = [
   },
 ];
 
+export const defaultJob = '개발자';
+
 
 type MemberFieldRuleFactories = {
   required: (label: string) => Rule;

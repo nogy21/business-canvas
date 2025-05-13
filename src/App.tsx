@@ -1,6 +1,6 @@
 import { ConfigProvider } from 'antd'
 import koKR from 'antd/locale/ko_KR'
-import MemberTable from './components/MemberTable'
+import MemberTable from './components/table/MemberTable'
 
 export default function App() {
   return (
