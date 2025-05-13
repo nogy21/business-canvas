@@ -19,7 +19,7 @@ export function FieldFormItem({ field }: FieldFormItemProps) {
   return (
     <Form.Item
       label={
-        <span>
+        <span className="text-sm text-black/45 font-semibold">
           {field.label}
           {field.required && <span className="text-red-500 ml-1">*</span>}
         </span>
@@ -27,6 +27,7 @@ export function FieldFormItem({ field }: FieldFormItemProps) {
       name={field.key}
       rules={getRules(field)}
       valuePropName={valuePropName}
+      validateTrigger={['onChange', 'onBlur']}
     >
       {input}
     </Form.Item>

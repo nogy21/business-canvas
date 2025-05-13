@@ -4,6 +4,7 @@ import { memberFields } from '@/constants/memberFields';
 import type { RecordData } from '@/types/record';
 
 import { FieldFormItem } from '../field-form/FieldFormItem';
+import { ModalTitle } from './ModalTitle';
 
 type Props = {
   open: boolean;
@@ -14,7 +15,7 @@ type Props = {
 
 export function MemberEditModal({ open, onClose, onEdit, initialValues }: Props) {
   return (
-    <Modal title="회원 수정" open={open} onCancel={onClose} footer={null}>
+    <Modal title={<ModalTitle title="회원 수정" />} open={open} onCancel={onClose} footer={null}>
       <Form
         initialValues={initialValues}
         onFinish={onEdit}

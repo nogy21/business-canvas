@@ -4,6 +4,7 @@ import { defaultJob, memberFields } from '@/constants/memberFields';
 import type { RecordData } from '@/types/record';
 
 import { FieldFormItem } from '../field-form/FieldFormItem';
+import { ModalTitle } from './ModalTitle';
 
 
 type Props = {
@@ -15,7 +16,7 @@ type Props = {
 
 export function MemberAddModal({ open, onClose, onAdd, form }: Props) {
   return (
-    <Modal title="회원 추가" open={open} onCancel={onClose} footer={null}>
+    <Modal title={<ModalTitle title="회원 추가" />} open={open} onCancel={onClose} footer={null}>
       <Form
         form={form}
         layout="vertical"
@@ -28,7 +29,7 @@ export function MemberAddModal({ open, onClose, onAdd, form }: Props) {
         ))}
         <div className="flex justify-end gap-2">
           <Button onClick={onClose}>취소</Button>
-          <Button htmlType="submit">추가</Button>
+          <Button htmlType="submit" disabled={!form.isFieldsValidating()}>추가</Button>
         </div>
       </Form>
     </Modal>
