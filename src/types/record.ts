@@ -1,6 +1,6 @@
 import type { Dayjs } from "dayjs";
 
-export type RecordValue =
+type RecordValue =
   | string // text, textarea, date, select
   | boolean // checkbox
   | Dayjs; // date

@@ -5,13 +5,13 @@ import { Button, Form, Modal, Table } from 'antd';
 import type { ColumnType } from 'antd/lib/table';
 import Title from 'antd/lib/typography/Title';
 
-import { memberFields } from '@/constants/memberFields';
 import { defaultRecords } from '@/data/default';
 import type { RecordData } from '@/types/record';
 
+import { memberFields } from '@/constants/memberFields';
 import dayjs from 'dayjs';
-import createColumns from './createColumns';
-import { FieldFormItem } from './FieldFormItem';
+import createColumns from './column/createColumns';
+import { FieldFormItem } from './field-form/FieldFormItem';
 
 
 export default function MemberTable() {
