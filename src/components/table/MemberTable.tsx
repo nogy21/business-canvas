@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Form } from 'antd';
+import { Form, Modal } from 'antd';
 import type { ColumnType } from 'antd/lib/table';
 
 import { defaultRecords } from '@/data/default';
@@ -11,7 +11,7 @@ import { MemberAddModal } from './MemberAddModal';
 import { MemberEditModal } from './MemberEditModal';
 import { MemberTableBody } from './MemberTableBody';
 import { MemberTableHeader } from './MemberTableHeader';
-import { addMember, editMember, toEditInitialValues } from './memberTableUtils';
+import { addMember, editMember, removeMember, toEditInitialValues } from './memberTableUtils';
 import { useModal } from './useModal';
 
 
@@ -22,7 +22,6 @@ export default function MemberTable() {
   const [form] = Form.useForm<RecordData>();
   const [records, setRecords] = useState<RecordData[]>(defaultRecords);
   const [editRecord, setEditRecord] = useState<RecordData | null>(null);
-
   const addModal = useModal();
   const editModal = useModal();
 
@@ -43,7 +42,20 @@ export default function MemberTable() {
     setEditRecord(null);
   };
 
-  const columns: ColumnType<RecordData>[] = createColumns(handleEdit);
+  const handleDelete = (record: RecordData) => {
+    Modal.confirm({
+      title: '정말 삭제하시겠습니까?',
+      content: `"${record.name}" 회원 정보를 삭제합니다.`,
+      okText: '삭제',
+      okType: 'danger',
+      cancelText: '취소',
+      onOk: () => {
+        setRecords(prev => removeMember(prev, String(record.name)));
+      },
+    });
+  };
+
+  const columns: ColumnType<RecordData>[] = createColumns(handleEdit, handleDelete);
 
   return (
     <div>

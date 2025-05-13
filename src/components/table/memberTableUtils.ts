@@ -57,3 +57,13 @@ export function toEditInitialValues(record: RecordData): RecordData {
     joinedAt,
   };
 }
+
+/**
+ * 회원 삭제
+ * @param records 회원 목록
+ * @param deleteKey 삭제할 회원 이름
+ * @returns 삭제된 회원 목록
+ */
+export function removeMember(records: RecordData[], deleteKey: string): RecordData[] {
+  return records.filter(r => r.name !== deleteKey);
+}

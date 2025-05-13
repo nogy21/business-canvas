@@ -35,7 +35,7 @@ const createFieldColumn = (
 /**
  * 더보기 버튼 컬럼
  */
-const createMoreButtonColumn = (onEdit: (record: RecordData) => void): ColumnType<RecordData> => ({
+const createMoreButtonColumn = (onEdit: (record: RecordData) => void, onDelete: (record: RecordData) => void): ColumnType<RecordData> => ({
   title: '',
   key: 'actions',
   dataIndex: 'actions',
@@ -50,8 +50,15 @@ const createMoreButtonColumn = (onEdit: (record: RecordData) => void): ColumnTyp
             label: '수정',
             onClick: () => onEdit(record),
           },
+          {
+            type: 'divider',
+          },
+          {
+            key: 'delete',
+            label: <span className='text-red-500'>삭제</span>,
+            onClick: () => onDelete(record),
+          },
         ],
-        //TODO: 삭제 기능
       }}
       trigger={['click']}
     >
@@ -70,9 +77,9 @@ const createMoreButtonColumn = (onEdit: (record: RecordData) => void): ColumnTyp
 /**
  * 최종 컬럼 구성
  */
-export default function createColumns(onEdit: (record: RecordData) => void): ColumnType<RecordData>[] {
+export default function createColumns(onEdit: (record: RecordData) => void, onDelete: (record: RecordData) => void): ColumnType<RecordData>[] {
   return [
     ...memberFields.map(createFieldColumn),
-    createMoreButtonColumn(onEdit),
+    createMoreButtonColumn(onEdit, onDelete),
   ];
 }
