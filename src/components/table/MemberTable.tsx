@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Form, Modal } from 'antd';
 import type { ColumnType } from 'antd/lib/table';
@@ -6,6 +6,7 @@ import type { ColumnType } from 'antd/lib/table';
 import { defaultRecords } from '@/data/default';
 import type { RecordData } from '@/types/record';
 
+import { loadRecords, saveRecords, STORAGE_MODE, STORAGE_MODES } from '@/utils/storage';
 import createColumns from '../column/createColumns';
 import { MemberAddModal } from './MemberAddModal';
 import { MemberEditModal } from './MemberEditModal';
@@ -20,7 +21,22 @@ import { useModal } from './useModal';
  */
 export default function MemberTable() {
   const [form] = Form.useForm<RecordData>();
-  const [records, setRecords] = useState<RecordData[]>(defaultRecords);
+  const [records, setRecords] = useState<RecordData[]>(() => {
+    if (STORAGE_MODE === STORAGE_MODES.LOCAL_STORAGE) {
+      const loaded = loadRecords();
+      return loaded.length > 0 ? loaded : defaultRecords;
+    }
+    return defaultRecords;
+  }
+  );
+
+  useEffect(() => {
+    if (STORAGE_MODE === STORAGE_MODES.LOCAL_STORAGE) {
+      console.log('saveRecords', records);
+      saveRecords(records);
+    }
+  }, [records]);
+
   const [editRecord, setEditRecord] = useState<RecordData | null>(null);
   const addModal = useModal();
   const editModal = useModal();
