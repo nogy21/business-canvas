@@ -78,21 +78,60 @@ export default function MemberTable() {
         onCancel={handleClose}
         footer={null}
       >
-        <Form form={form} layout="vertical" onFinish={handleAdd}>
+        <Form form={form} layout="vertical" onFinish={handleAdd} requiredMark={false}>
           {/* 이름 */}
-          <Form.Item label="이름" name="name" rules={[{ required: true, message: '이름을 입력하세요.' }]}>
-            <Input />
+          <Form.Item
+            label={
+              <span>
+                이름
+                <span className="text-red-500 ml-1">
+                  *
+                </span>
+              </span>
+            }
+            name="name"
+            rules={[
+              { required: true, message: '이름을 입력하세요.' },
+              { max: 20, message: '이름은 20자 이하로 입력하세요.' },
+            ]}
+          >
+            <Input maxLength={20} />
           </Form.Item>
           {/* 주소 */}
-          <Form.Item label="주소" name="address" rules={[{ required: true, message: '주소를 입력하세요.' }]}>
-            <Input />
+          <Form.Item
+            label="주소"
+            name="address"
+            rules={[
+              { max: 20, message: '주소는 20자 이하로 입력하세요.' },
+            ]}
+          >
+            <Input maxLength={20} />
           </Form.Item>
           {/* 메모 */}
-          <Form.Item label="메모" name="memo">
-            <Input.TextArea />
+          <Form.Item
+            label="메모"
+            name="memo"
+            rules={[
+              { max: 50, message: '메모는 50자 이하로 입력하세요.' },
+            ]}
+          >
+            <Input.TextArea maxLength={50} />
           </Form.Item>
           {/* 가입일 */}
-          <Form.Item label="가입일" name="joinedAt">
+          <Form.Item
+            label={
+              <span>
+                가입일
+                <span className="text-red-500 ml-1">
+                  *
+                </span>
+              </span>
+            }
+            name="joinedAt"
+            rules={[
+              { required: true, message: '가입일을 선택하세요.' },
+            ]}
+          >
             <DatePicker />
           </Form.Item>
           {/* 직업 */}
