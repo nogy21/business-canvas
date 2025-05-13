@@ -14,13 +14,22 @@ const columns: ColumnType<RecordData>[] = createColumns();
 
 export default function MemberTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [records, setRecords] = useState<RecordData[]>(defaultRecords);
+  const [form] = Form.useForm();
 
   // Modal 열기/닫기 핸들러
   const handleOpen = () => setIsModalOpen(true);
   const handleClose = () => setIsModalOpen(false);
 
   const handleAdd = (values: RecordData) => {
-    alert(JSON.stringify(values));
+    const joinedAt: string = (typeof values.joinedAt === 'object' && 'format' in values.joinedAt)
+      ? values.joinedAt.format('YYYY-MM-DD')
+      : typeof values.joinedAt === 'string' ? values.joinedAt : '';
+    const emailOptIn: boolean = typeof values.emailOptIn === 'boolean' ? values.emailOptIn : false;
+
+    setRecords((prev) => [...prev, { ...values, joinedAt, emailOptIn }]);
+    setIsModalOpen(false);
+    form.resetFields();
   };
 
   return (
@@ -47,7 +56,7 @@ export default function MemberTable() {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
           },
         }}
-        dataSource={defaultRecords}
+        dataSource={records}
         columns={columns}
         pagination={false}
         className="rounded-xl border border-gray-200 bg-white"
@@ -69,7 +78,7 @@ export default function MemberTable() {
         onCancel={handleClose}
         footer={null}
       >
-        <Form layout="vertical" onFinish={handleAdd}>
+        <Form form={form} layout="vertical" onFinish={handleAdd}>
           {/* 이름 */}
           <Form.Item label="이름" name="name" rules={[{ required: true, message: '이름을 입력하세요.' }]}>
             <Input />
@@ -95,7 +104,7 @@ export default function MemberTable() {
             </Select>
           </Form.Item>
           {/* 이메일 수신 여부 */}
-          <Form.Item label="이메일 수신 여부" name="emailOptIn">
+          <Form.Item label="이메일 수신 여부" name="emailOptIn" valuePropName="checked">
             <Checkbox />
           </Form.Item>
 
