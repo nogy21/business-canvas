@@ -1,14 +1,16 @@
 import { useState } from 'react';
 
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Checkbox, DatePicker, Form, Input, Modal, Select, Table } from 'antd';
+import { Button, Form, Modal, Table } from 'antd';
 import type { ColumnType } from 'antd/lib/table';
 import Title from 'antd/lib/typography/Title';
 
+import { memberFields } from '@/constants/memberFields';
 import { defaultRecords } from '@/data/default';
 import type { RecordData } from '@/types/record';
 
 import createColumns from './createColumns';
+import { FieldFormItem } from './FieldFormItem';
 
 const columns: ColumnType<RecordData>[] = createColumns();
 
@@ -17,7 +19,6 @@ export default function MemberTable() {
   const [records, setRecords] = useState<RecordData[]>(defaultRecords);
   const [form] = Form.useForm();
 
-  // Modal 열기/닫기 핸들러
   const handleOpen = () => setIsModalOpen(true);
   const handleClose = () => setIsModalOpen(false);
 
@@ -51,10 +52,7 @@ export default function MemberTable() {
       <Table
         rowKey="name"
         rowSelection={{
-          type: 'checkbox',
-          onChange: (selectedRowKeys, selectedRows) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-          },
+          type: 'checkbox'
         }}
         dataSource={records}
         columns={columns}
@@ -79,73 +77,9 @@ export default function MemberTable() {
         footer={null}
       >
         <Form form={form} layout="vertical" onFinish={handleAdd} requiredMark={false}>
-          {/* 이름 */}
-          <Form.Item
-            label={
-              <span>
-                이름
-                <span className="text-red-500 ml-1">
-                  *
-                </span>
-              </span>
-            }
-            name="name"
-            rules={[
-              { required: true, message: '이름을 입력하세요.' },
-              { max: 20, message: '이름은 20자 이하로 입력하세요.' },
-            ]}
-          >
-            <Input maxLength={20} />
-          </Form.Item>
-          {/* 주소 */}
-          <Form.Item
-            label="주소"
-            name="address"
-            rules={[
-              { max: 20, message: '주소는 20자 이하로 입력하세요.' },
-            ]}
-          >
-            <Input maxLength={20} />
-          </Form.Item>
-          {/* 메모 */}
-          <Form.Item
-            label="메모"
-            name="memo"
-            rules={[
-              { max: 50, message: '메모는 50자 이하로 입력하세요.' },
-            ]}
-          >
-            <Input.TextArea maxLength={50} />
-          </Form.Item>
-          {/* 가입일 */}
-          <Form.Item
-            label={
-              <span>
-                가입일
-                <span className="text-red-500 ml-1">
-                  *
-                </span>
-              </span>
-            }
-            name="joinedAt"
-            rules={[
-              { required: true, message: '가입일을 선택하세요.' },
-            ]}
-          >
-            <DatePicker />
-          </Form.Item>
-          {/* 직업 */}
-          <Form.Item label="직업" name="job">
-            <Select>
-              <Select.Option value="developer">개발자</Select.Option>
-              <Select.Option value="designer">디자이너</Select.Option>
-              <Select.Option value="manager">매니저</Select.Option>
-            </Select>
-          </Form.Item>
-          {/* 이메일 수신 여부 */}
-          <Form.Item label="이메일 수신 여부" name="emailOptIn" valuePropName="checked">
-            <Checkbox />
-          </Form.Item>
+          {memberFields.map(field => (
+            <FieldFormItem key={field.key} field={field} />
+          ))}
 
           {/* 취소/추가 */}
           <div className="flex justify-end gap-2">
