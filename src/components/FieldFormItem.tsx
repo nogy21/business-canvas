@@ -27,7 +27,6 @@ const mapFieldToComponent = (field: MemberField) => {
             label,
             value,
           })) || []}
-          defaultValue={field.options?.[0]}
         />
       );
     case 'emailOptIn':

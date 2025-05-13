@@ -1,7 +1,7 @@
 import { defaultFields, defaultRecords } from '@/data/default';
 import type { RecordData } from '@/types/record';
 import { MoreOutlined } from '@ant-design/icons';
-import { Checkbox } from 'antd';
+import { Checkbox, Dropdown } from 'antd';
 import type { ColumnType } from 'antd/lib/table';
 import type { FilterDropdownProps } from 'antd/lib/table/interface';
 import type { ReactNode } from 'react';
@@ -56,28 +56,42 @@ const createFilteredColumn = (
 /**
  * 더보기 버튼 컬럼
  */
-const moreButtonColumn: ColumnType<RecordData> = {
+const createMoreButtonColumn = (onEdit: (record: RecordData) => void): ColumnType<RecordData> => ({
   title: '', // 헤더 비움
   key: 'actions',
   dataIndex: 'actions',
   width: 48, // Figma에 맞게 조정
   align: 'center',
-  render: () => (
-    <button
-      type="button"
-      className="flex items-center justify-center w-8 h-8 rounded hover:bg-gray-100"
-      aria-label="메뉴"
-      tabIndex={0}
+  render: (_, record: RecordData) => (
+    <Dropdown
+      menu={{
+        items: [
+          {
+            key: 'edit',
+            label: '수정',
+            onClick: () => onEdit(record),
+          },
+        ],
+        //TODO: 삭제 기능
+      }}
+      trigger={['click']}
     >
-      <MoreOutlined className="text-sm text-gray-500" />
-    </button>
+      <button
+        type="button"
+        className="flex items-center justify-center w-8 h-8 rounded hover:bg-gray-100"
+        aria-label="메뉴"
+        tabIndex={0}
+      >
+        <MoreOutlined className="text-sm text-gray-500" />
+      </button>
+    </Dropdown>
   ),
-}
+});
 
 /**
  * 최종 컬럼 구성
  */
-export default function createColumns(): ColumnType<RecordData>[] {
+export default function createColumns(onEdit: (record: RecordData) => void): ColumnType<RecordData>[] {
   return [...defaultFields.map((field) => {
     switch (field.key) {
       case "emailOptIn":
@@ -116,5 +130,5 @@ export default function createColumns(): ColumnType<RecordData>[] {
         };
       }
     }
-  }), moreButtonColumn];
+  }), createMoreButtonColumn(onEdit)];
 }

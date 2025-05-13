@@ -9,15 +9,18 @@ import { memberFields } from '@/constants/memberFields';
 import { defaultRecords } from '@/data/default';
 import type { RecordData } from '@/types/record';
 
+import dayjs from 'dayjs';
 import createColumns from './createColumns';
 import { FieldFormItem } from './FieldFormItem';
 
-const columns: ColumnType<RecordData>[] = createColumns();
 
 export default function MemberTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [records, setRecords] = useState<RecordData[]>(defaultRecords);
   const [form] = Form.useForm();
+
+  const [editRecord, setEditRecord] = useState<RecordData | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const handleOpen = () => setIsModalOpen(true);
   const handleClose = () => setIsModalOpen(false);
@@ -32,6 +35,39 @@ export default function MemberTable() {
     setIsModalOpen(false);
     form.resetFields();
   };
+
+  const handleEdit = (record: RecordData) => {
+    setEditRecord(record);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit = (values: RecordData) => {
+    const joinedAt: string =
+      typeof values.joinedAt === 'object' && values.joinedAt && 'format' in values.joinedAt
+        ? values.joinedAt.format('YYYY-MM-DD')
+        : typeof values.joinedAt === 'string'
+          ? values.joinedAt
+          : '';
+
+    const emailOptIn: boolean = typeof values.emailOptIn === 'boolean' ? values.emailOptIn : false;
+
+    setRecords(prev =>
+      prev.map(r =>
+        r.name === editRecord?.name
+          ? { ...r, ...values, joinedAt, emailOptIn }
+          : r
+      )
+    );
+    setIsEditModalOpen(false);
+    setEditRecord(null);
+  };
+
+  const handleEditCancel = () => {
+    setIsEditModalOpen(false);
+    setEditRecord(null);
+  };
+
+  const columns: ColumnType<RecordData>[] = createColumns(handleEdit);
 
   return (
     <div>
@@ -76,7 +112,13 @@ export default function MemberTable() {
         onCancel={handleClose}
         footer={null}
       >
-        <Form form={form} layout="vertical" onFinish={handleAdd} requiredMark={false}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleAdd}
+          requiredMark={false}
+          initialValues={{ job: '개발자' }}
+        >
           {memberFields.map(field => (
             <FieldFormItem key={field.key} field={field} />
           ))}
@@ -89,6 +131,34 @@ export default function MemberTable() {
         </Form>
       </Modal>
 
+      {/* 회원 수정 Modal */}
+      <Modal
+        title="회원 수정"
+        open={isEditModalOpen}
+        onCancel={handleEditCancel}
+        footer={null}
+      >
+        <Form
+          initialValues={editRecord
+            ? {
+              ...editRecord,
+              joinedAt: editRecord.joinedAt ? dayjs(editRecord.joinedAt as string) : null,
+            }
+            : undefined
+          }
+          onFinish={handleEditSubmit}
+          layout="vertical"
+          requiredMark={false}
+        >
+          {memberFields.map(field => (
+            <FieldFormItem field={field} key={field.key} />
+          ))}
+          <div className="flex justify-end gap-2">
+            <Button onClick={handleEditCancel}>취소</Button>
+            <Button htmlType="submit" type="primary">저장</Button>
+          </div>
+        </Form>
+      </Modal>
     </div>
   );
 }
